@@ -1,0 +1,828 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Статистика Игоря и Алексея Лихобабиных, «Арена Топ-Спин»"><title>Игорь и папа — настольный теннис</title>
+<style>html,body{margin:0;background:#07080c;} @page { margin: 0; }</style>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script>window.d3 || document.write('<script src="https://unpkg.com/d3@7.9.0/dist/d3.min.js"><\/script>')</script>
+<script>window.d3 || document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"><\/script>')</script>
+<script>
+window.__ARCH = null;
+const __loaders = {}, __calcs = {}, __draws = {};
+window.dash = {
+colors: ['#7d7aff', '#64d2ff'],
+loader: (id, o) => { __loaders[id] = o; },
+calc: (id, o) => { __calcs[id] = o; },
+setLink: () => {},
+data: (id) => {
+if (__loaders[id]) return { status: 'ok', data: __loaders[id].fn({ answer: window.__ARCH }) };
+const c = __calcs[id];
+if (!c) return { status: 'missing', data: [] };
+return { status: 'ok', data: c.fn(...c.inputs.map((i) => window.dash.data(i).data)) };
+},
+draw: (name, fn) => {
+if (fn) { __draws[name] = fn; return; }
+document.querySelectorAll('[data-draw="' + name + '"]').forEach((el) => __draws[name](el));
+},
+};
+window.__drawAll = () => {
+document.querySelectorAll('[data-draw]').forEach((el) => {
+const f = __draws[el.getAttribute('data-draw')];
+if (f && !el.closest('[hidden]')) f(el);
+});
+};
+</script>
+</head><body><div id="dash-root">
+<style>
+#dash-root { --dash-gutter: 0; }
+.tt {
+--bg: #07080c; --fg: #f5f5f7; --muted: rgba(235,235,245,.6); --faint: rgba(235,235,245,.38);
+--stroke: rgba(255,255,255,.11);
+--green: #32d74b; --red: #ff6961; --blue: #0a84ff; --indigo: #7d7aff; --teal: #64d2ff; --gold: #ffd60a; --orange: #ff9f0a; --pink: #ff6fae;
+--font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI", system-ui, sans-serif;
+position: relative; isolation: isolate; overflow: hidden;
+background: var(--bg); color: var(--fg); font-family: var(--font);
+-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+padding: clamp(18px, 4vw, 44px); display: flex; flex-direction: column; gap: 22px; min-height: 100%;
+}
+.tt::before, .tt::after { content: ""; position: absolute; z-index: -1; pointer-events: none; border-radius: 50%; filter: blur(80px); }
+.tt::before { width: 720px; height: 720px; top: -260px; left: -200px; background: radial-gradient(circle, rgba(125,122,255,.55), rgba(125,122,255,0) 65%); }
+.tt::after { width: 680px; height: 680px; top: 380px; right: -260px; background: radial-gradient(circle, rgba(100,210,255,.35), rgba(100,210,255,0) 65%); }
+.tt-blob { position: absolute; z-index: -1; pointer-events: none; width: 620px; height: 620px; bottom: -200px; left: 10%; border-radius: 50%; filter: blur(90px); background: radial-gradient(circle, rgba(255,111,174,.22), rgba(255,111,174,0) 65%); }
+.tt-blob2 { position: absolute; z-index: -1; pointer-events: none; width: 560px; height: 560px; top: 1500px; left: -180px; border-radius: 50%; filter: blur(90px); background: radial-gradient(circle, rgba(50,215,75,.16), rgba(50,215,75,0) 65%); }
+.tt-tab { display: flex; flex-direction: column; gap: 22px; }
+.tt-tab[hidden] { display: none; }
+.glass {
+position: relative; min-width: 0;
+background: linear-gradient(160deg, rgba(255,255,255,.11), rgba(255,255,255,.035) 45%, rgba(255,255,255,.05));
+-webkit-backdrop-filter: blur(28px) saturate(170%); backdrop-filter: blur(28px) saturate(170%);
+border: 1px solid var(--stroke); border-radius: 24px; padding: 20px 22px;
+box-shadow: inset 0 1px 0 rgba(255,255,255,.18), inset 0 -1px 0 rgba(255,255,255,.04), 0 12px 40px rgba(0,0,0,.45);
+}
+.glass::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: radial-gradient(120% 60% at 15% 0%, rgba(255,255,255,.10), rgba(255,255,255,0) 55%); }
+.tt-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.tt-head { display: flex; flex-direction: column; gap: 12px; padding: 8px 2px 4px; }
+.tt-kicker { font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; margin: 0; }
+.tt-title { font-size: clamp(34px, 6vw, 58px); font-weight: 700; letter-spacing: -.035em; line-height: 1.02; margin: 0;
+background: linear-gradient(100deg, #fff 20%, #c9c8ff 55%, #9be3ff 90%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.tt-lede { font-size: clamp(16px, 2.2vw, 20px); font-weight: 400; color: rgba(235,235,245,.82); margin: 0; max-width: 62ch; line-height: 1.5; letter-spacing: -.01em; }
+.tt-lede b { font-weight: 600; color: var(--fg); font-variant-numeric: tabular-nums; }
+.tt-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 0; padding: 0; list-style: none; }
+.tt-chips li { font-size: 12.5px; color: var(--muted); padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); box-shadow: inset 0 1px 0 rgba(255,255,255,.12); }
+.tt-chips li span { color: var(--fg); font-weight: 500; }
+.tt-chips a { color: var(--teal); text-decoration: none; }
+.tt-h { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 6px 2px 0; }
+.tt-h h2, .glass h2 { font-size: 20px; font-weight: 650; letter-spacing: -.02em; margin: 0; color: var(--fg); }
+.tt-sub { font-size: 13.5px; color: var(--muted); margin: 4px 0 0; max-width: 70ch; line-height: 1.45; }
+.tt-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
+.tt-tile { padding: 16px 18px; border-radius: 22px; }
+.tt-label { font-size: 12.5px; font-weight: 500; color: var(--muted); margin: 0 0 8px; }
+.tt-value { font-size: clamp(28px, 3.6vw, 36px); font-weight: 650; letter-spacing: -.03em; line-height: 1; font-variant-numeric: tabular-nums; margin: 0; }
+.tt-value small { font-size: .55em; font-weight: 500; color: var(--muted); margin-left: 2px; letter-spacing: 0; }
+.tt-note { font-size: 12px; color: var(--faint); margin: 8px 0 0; font-variant-numeric: tabular-nums; }
+.tt-good { color: var(--green); }
+.tt-bad { color: var(--red); }
+.tt-grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+.tt-chart { position: relative; width: 100%; min-height: 220px; margin-top: 14px; }
+.tt-chart svg { display: block; overflow: visible; }
+.tt-chart text { font-family: var(--font); font-size: 11px; fill: rgba(235,235,245,.5); font-variant-numeric: tabular-nums; }
+.tt-chart .tt-lbl { fill: var(--fg); font-size: 12px; font-weight: 600; }
+.tt-chart .domain { display: none; }
+.tt-tip { position: absolute; pointer-events: none; z-index: 3; white-space: nowrap; font-size: 12.5px; line-height: 1.45; color: var(--fg);
+background: rgba(30,30,38,.62); -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%);
+border: 1px solid rgba(255,255,255,.16); border-radius: 14px; padding: 8px 11px; box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 10px 30px rgba(0,0,0,.5);
+transition: left .12s ease-out, top .12s ease-out, opacity .15s; }
+.tt-tip small { color: var(--muted); display: block; font-size: 11.5px; }
+.tt-tip b { font-weight: 650; }
+.tt-seg { display: inline-flex; gap: 2px; padding: 3px; border-radius: 999px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); box-shadow: inset 0 1px 0 rgba(255,255,255,.1); }
+.tt-seg button { font: inherit; font-family: var(--font); font-size: 12.5px; font-weight: 500; color: var(--muted); background: transparent; border: 0; padding: 6px 14px; border-radius: 999px; cursor: pointer; transition: background .25s ease, color .25s ease; }
+.tt-seg button:hover { color: var(--fg); }
+.tt-seg button.on { color: var(--fg); background: rgba(255,255,255,.18); box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 2px 8px rgba(0,0,0,.25); }
+.tt-seg.big button { font-size: 15px; padding: 9px 22px; font-weight: 600; }
+.tt-medals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
+.tt-medal { text-align: center; padding: 18px 10px; border-radius: 20px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08); }
+.tt-medal .tt-value { font-size: 40px; }
+.tt-medal-icon { font-size: 28px; line-height: 1; margin: 0 0 8px; }
+.tt-medal.g { box-shadow: 0 0 40px rgba(255,214,10,.12) inset; }
+.tt-medal.s { box-shadow: 0 0 40px rgba(220,220,235,.08) inset; }
+.tt-medal.b { box-shadow: 0 0 40px rgba(255,159,10,.10) inset; }
+.tt-tablewrap { overflow-x: auto; margin-top: 10px; }
+.tt-table { width: 100%; border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; }
+.tt-table th { text-align: left; font-weight: 500; font-size: 12px; color: var(--faint); padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,.09); white-space: nowrap; }
+.tt-table td { padding: 9px 10px; border-bottom: 1px solid rgba(255,255,255,.055); white-space: nowrap; color: rgba(245,245,247,.92); }
+.tt-table tbody tr { transition: background .2s ease; }
+.tt-table tbody tr:hover { background: rgba(255,255,255,.045); }
+.tt-table tbody tr:last-child td { border-bottom: 0; }
+.tt-table .r { text-align: right; }
+.tt-foot { font-size: 12px; color: var(--faint); margin: 4px 2px 0; }
+.tt-head.tt-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(270px, 380px); column-gap: 28px; row-gap: 12px; align-items: center; }
+.tt-hero > :not(.tt-hero-card) { grid-column: 1; }
+.tt-hero-card { grid-column: 2; grid-row: 1 / span 3; padding: 22px 24px; border-radius: 28px; }
+.tt-hero-card .tt-label { margin: 0; }
+.tt-hero-num { font-size: clamp(60px, 9vw, 92px); font-weight: 700; letter-spacing: -.05em; line-height: .95; margin: 6px 0 0; font-variant-numeric: tabular-nums;
+background: linear-gradient(100deg, #fff 15%, #c9c8ff 60%, #9be3ff 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.tt-hero-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
+.tt-hero-stat { padding: 10px 12px; border-radius: 16px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.09); box-shadow: inset 0 1px 0 rgba(255,255,255,.08); }
+.tt-hero-stat span { display: block; font-size: 11.5px; color: var(--muted); margin-bottom: 4px; }
+@media (max-width: 760px) { .tt-head.tt-hero { grid-template-columns: 1fr; } .tt-hero-card { grid-column: 1; grid-row: auto; } }
+.tt-hero-stat b { font-size: 19px; font-weight: 650; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: no-preference) {
+.glass { transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease; }
+.tt-tile:hover { transform: translateY(-2px); }
+}
+</style>
+<div class="tt">
+<div class="tt-blob"></div><div class="tt-blob2"></div>
+<div class="tt-top" id="tabs">
+<div class="tt-seg big" role="tablist" aria-label="Игрок">
+<button type="button" class="on" data-tab="igor">Игорь</button>
+<button type="button" data-tab="alexey">Папа</button>
+</div>
+</div>
+<div class="tt-tab" id="tab-igor">
+<header class="tt-head tt-hero" id="head-igor">
+<p class="tt-kicker">Настольный теннис · «Арена Топ-Спин»</p>
+<h1 class="tt-title">Игорь Лихобабин</h1>
+<div class="glass tt-hero-card" id="hero-igor">
+<p class="tt-label">Рейтинг сейчас</p>
+<p class="tt-hero-num" data-draw="lede-rating-igor">—</p>
+<div class="tt-hero-stats">
+<div class="tt-hero-stat"><span>Пик</span><b data-draw="lede-max-igor">—</b></div>
+<div class="tt-hero-stat"><span>За 30 дней</span><b data-draw="lede-30-igor">—</b></div>
+<div class="tt-hero-stat"><span>С начала года</span><b data-draw="lede-ytd-igor">—</b></div>
+<div class="tt-hero-stat"><span>За 10 турниров</span><b data-draw="lede-10-igor">—</b></div>
+</div>
+</div>
+<ul class="tt-chips">
+<li>Санкт-Петербург</li>
+<li>Клуб: <span>«Арена Топ-Спин»</span></li>
+<li><a href="https://topspin-club.ru/players/eltokkutmdbx" target="_blank" rel="noopener">Профиль на topspin-club.ru ↗</a></li>
+</ul>
+</header>
+<div class="tt-h" id="dyn-head-igor"><h2>Динамика рейтинга</h2></div>
+<section class="tt-tiles" id="dyn-igor">
+<div class="glass tt-tile" id="dyn-rating-igor">
+<p class="tt-label">Текущий рейтинг</p>
+<p class="tt-value" data-draw="d-rating-igor" data-source="stats" data-field="rating" data-where="player=igor">—</p>
+<p class="tt-note">пик <span data-draw="d-max-igor" data-source="stats" data-field="max_rating" data-where="player=igor">—</span> · <span data-draw="d-maxdate-igor" data-source="stats" data-field="max_date" data-where="player=igor">—</span></p>
+</div>
+<div class="glass tt-tile" id="dyn-last10-igor">
+<p class="tt-label">За 10 турниров</p>
+<p class="tt-value" data-draw="d-last10-igor" data-source="stats" data-field="last10" data-where="player=igor">—</p>
+<p class="tt-note">сумма изменений</p>
+</div>
+<div class="glass tt-tile" id="dyn-30-igor">
+<p class="tt-label">За 30 дней</p>
+<p class="tt-value" data-draw="d-last30-igor" data-source="stats" data-field="last30" data-where="player=igor">—</p>
+<p class="tt-note"><span data-draw="d-n30-igor" data-source="stats" data-field="n30" data-where="player=igor">—</span> игровых дней</p>
+</div>
+<div class="glass tt-tile" id="dyn-ytd-igor">
+<p class="tt-label">С начала года</p>
+<p class="tt-value" data-draw="d-ytd-igor" data-source="stats" data-field="ytd" data-where="player=igor">—</p>
+<p class="tt-note">с <span data-draw="d-start-igor" data-source="stats" data-field="start_rating" data-where="player=igor">—</span> · <span data-draw="d-nytd-igor" data-source="stats" data-field="n_ytd" data-where="player=igor">—</span> игровых дней</p>
+</div>
+<div class="glass tt-tile" id="dyn-avg-igor">
+<p class="tt-label">Средний итог турнира</p>
+<p class="tt-value" data-draw="d-avg-igor" data-source="stats" data-field="avg_delta" data-where="player=igor">—</p>
+<p class="tt-note">по турнирам в архиве</p>
+</div>
+<div class="glass tt-tile" id="dyn-best-igor">
+<p class="tt-label">Лучший турнир</p>
+<p class="tt-value tt-good" data-draw="d-best-igor" data-source="stats" data-field="best" data-where="player=igor">—</p>
+<p class="tt-note" data-draw="d-bestdate-igor" data-source="stats" data-field="best_date" data-where="player=igor">—</p>
+</div>
+<div class="glass tt-tile" id="dyn-worst-igor">
+<p class="tt-label">Худший турнир</p>
+<p class="tt-value tt-bad" data-draw="d-worst-igor" data-source="stats" data-field="worst" data-where="player=igor">—</p>
+<p class="tt-note" data-draw="d-worstdate-igor" data-source="stats" data-field="worst_date" data-where="player=igor">—</p>
+</div>
+</section>
+<section class="glass" id="rating-sec-igor">
+<div class="tt-h" style="margin:0">
+<div><h2>Путь рейтинга</h2><p class="tt-sub">Рейтинг по игровым дням с января. Наведите на график, чтобы увидеть дату и турниры.</p></div>
+<div class="tt-seg" role="group" aria-label="Период" data-ranges="igor">
+<button type="button" class="on" data-range="all">Всё время</button>
+<button type="button" data-range="180">6 мес</button>
+<button type="button" data-range="60">2 мес</button>
+<button type="button" data-range="30">Месяц</button>
+</div>
+</div>
+<div class="tt-chart" style="min-height:320px" data-draw="rating-igor" data-source="rating tours"></div>
+</section>
+<section class="glass" id="delta-sec-igor">
+<h2>Изменение рейтинга после каждого турнира</h2>
+<p class="tt-sub">Каждый столбик — один турнир из архива: вверх — плюс к рейтингу, вниз — минус.</p>
+<div class="tt-chart" style="min-height:220px" data-draw="deltas-igor" data-source="tours"></div>
+</section>
+<div class="tt-h" id="totals-head-igor"><h2>Общая статистика</h2></div>
+<section class="tt-tiles" id="kpis-igor">
+<div class="glass tt-tile" id="kpi-tours-igor">
+<p class="tt-label">Турниров в архиве</p>
+<p class="tt-value" data-draw="k-tours-igor" data-source="stats" data-field="tours" data-where="player=igor">—</p>
+<p class="tt-note">с <span data-draw="k-first-igor" data-source="stats" data-field="first_tour" data-where="player=igor">—</span></p>
+</div>
+<div class="glass tt-tile" id="kpi-games-igor">
+<p class="tt-label">Матчей</p>
+<p class="tt-value" data-draw="k-games-igor" data-source="stats" data-field="games" data-where="player=igor">—</p>
+<p class="tt-note"><span data-draw="k-wins-igor" data-source="stats" data-field="wins" data-where="player=igor">—</span> побед · <span data-draw="k-losses-igor" data-source="stats" data-field="losses" data-where="player=igor">—</span> поражений</p>
+</div>
+<div class="glass tt-tile" id="kpi-winpct-igor">
+<p class="tt-label">Процент побед</p>
+<p class="tt-value"><span data-draw="k-winpct-igor" data-source="stats" data-field="win_pct" data-where="player=igor">—</span><small>%</small></p>
+<p class="tt-note">в турнирах архива</p>
+</div>
+<div class="glass tt-tile" id="kpi-top-igor">
+<p class="tt-label">Позади в среднем</p>
+<p class="tt-value"><span data-draw="k-top-igor" data-source="stats" data-field="behind_pct" data-where="player=igor">—</span><small>%</small></p>
+<p class="tt-note">участников турнира</p>
+</div>
+</section>
+<section class="glass" id="medals-sec-igor">
+<h2>Призовые места</h2>
+<p class="tt-sub">На подиуме <b data-draw="podium-igor" data-source="stats" data-field="podium" data-where="player=igor">—</b> раз из <span data-draw="podium-of-igor" data-source="stats" data-field="tours" data-where="player=igor">—</span> турниров в архиве.</p>
+<div class="tt-medals">
+<div class="tt-medal g" id="gold-igor"><p class="tt-medal-icon">🥇</p><p class="tt-value" data-draw="gold-igor" data-source="stats" data-field="gold" data-where="player=igor">—</p><p class="tt-note">1-е места</p></div>
+<div class="tt-medal s" id="silver-igor"><p class="tt-medal-icon">🥈</p><p class="tt-value" data-draw="silver-igor" data-source="stats" data-field="silver" data-where="player=igor">—</p><p class="tt-note">2-е места</p></div>
+<div class="tt-medal b" id="bronze-igor"><p class="tt-medal-icon">🥉</p><p class="tt-value" data-draw="bronze-igor" data-source="stats" data-field="bronze" data-where="player=igor">—</p><p class="tt-note">3-и места</p></div>
+</div>
+</section>
+<section class="glass" id="activity-sec-igor">
+<h2>Активность по месяцам</h2>
+<p class="tt-sub">Сколько игровых дней было за месяц. Зелёный — рейтинг за месяц вырос, красный — упал.</p>
+<div class="tt-chart" data-draw="monthly-igor" data-source="monthly"></div>
+</section>
+<section class="glass" id="bands-sec-igor">
+<h2>Против кого выигрываю</h2>
+<p class="tt-sub">Процент побед по рейтингу соперника. Считается по матчам, сохранённым в архиве, поэтому картина уточняется с каждым турниром.</p>
+<div class="tt-chart" data-draw="bands-igor" data-source="bands"></div>
+</section>
+<section class="glass" id="recent-sec-igor">
+<h2>Последние турниры</h2>
+<div class="tt-tablewrap">
+<table class="tt-table" data-source="tours" data-row-key="player,id">
+<thead><tr><th data-field="date">Дата</th><th data-field="name">Турнир</th><th class="r" data-field="place">Место</th><th class="r" data-field="players">Участников</th><th class="r" data-field="wins">В</th><th class="r" data-field="losses">П</th><th class="r" data-field="delta">Δ рейтинга</th><th class="r" data-field="fieldAvg">Ср. рейтинг поля</th></tr></thead>
+<tbody data-draw="recent-igor"></tbody>
+</table>
+</div>
+</section>
+<section class="tt-grid2" id="people-sec-igor">
+<div class="glass" id="matches-igor">
+<h2>Матчи</h2>
+<p class="tt-sub">Сайт показывает матчи только последнего турнира, поэтому они копятся с 22.11.2026.</p>
+<div class="tt-tablewrap">
+<table class="tt-table" data-source="matches" data-row-key="player,tourId,game">
+<thead><tr><th data-field="date">Дата</th><th data-field="opp">Соперник</th><th class="r" data-field="oppRating">Его рейтинг</th><th class="r" data-field="for">Счёт</th><th class="r" data-field="delta">Δ</th></tr></thead>
+<tbody data-draw="matches-igor"></tbody>
+</table>
+</div>
+</div>
+<div class="glass" id="bestwins-igor">
+<h2>Лучшие победы</h2>
+<div class="tt-tablewrap">
+<table class="tt-table" data-source="best" data-row-key="player,date,opp">
+<thead><tr><th data-field="date">Дата</th><th data-field="opp">Соперник</th><th class="r" data-field="oppRating">Его рейтинг</th><th class="r" data-field="score">Счёт</th><th class="r" data-field="delta">+ рейтинга</th></tr></thead>
+<tbody data-draw="bestwins-igor"></tbody>
+</table>
+</div>
+</div>
+</section>
+</div>
+<div class="tt-tab" id="tab-alexey" hidden>
+<header class="tt-head tt-hero" id="head-alexey">
+<p class="tt-kicker">Настольный теннис · «Арена Топ-Спин»</p>
+<h1 class="tt-title">Алексей Лихобабин</h1>
+<div class="glass tt-hero-card" id="hero-alexey">
+<p class="tt-label">Рейтинг сейчас</p>
+<p class="tt-hero-num" data-draw="lede-rating-alexey">—</p>
+<div class="tt-hero-stats">
+<div class="tt-hero-stat"><span>Пик</span><b data-draw="lede-max-alexey">—</b></div>
+<div class="tt-hero-stat"><span>За 30 дней</span><b data-draw="lede-30-alexey">—</b></div>
+<div class="tt-hero-stat"><span>С начала года</span><b data-draw="lede-ytd-alexey">—</b></div>
+<div class="tt-hero-stat"><span>За 10 турниров</span><b data-draw="lede-10-alexey">—</b></div>
+</div>
+</div>
+<ul class="tt-chips">
+<li>Санкт-Петербург</li>
+<li>Клуб: <span>«Арена Топ-Спин»</span></li>
+<li><a href="https://topspin-club.ru/players/qhpduqstqyud" target="_blank" rel="noopener">Профиль на topspin-club.ru ↗</a></li>
+</ul>
+</header>
+<div class="tt-h" id="dyn-head-alexey"><h2>Динамика рейтинга</h2></div>
+<section class="tt-tiles" id="dyn-alexey">
+<div class="glass tt-tile" id="dyn-rating-alexey">
+<p class="tt-label">Текущий рейтинг</p>
+<p class="tt-value" data-draw="d-rating-alexey" data-source="stats" data-field="rating" data-where="player=alexey">—</p>
+<p class="tt-note">пик <span data-draw="d-max-alexey" data-source="stats" data-field="max_rating" data-where="player=alexey">—</span> · <span data-draw="d-maxdate-alexey" data-source="stats" data-field="max_date" data-where="player=alexey">—</span></p>
+</div>
+<div class="glass tt-tile" id="dyn-last10-alexey">
+<p class="tt-label">За 10 турниров</p>
+<p class="tt-value" data-draw="d-last10-alexey" data-source="stats" data-field="last10" data-where="player=alexey">—</p>
+<p class="tt-note">сумма изменений</p>
+</div>
+<div class="glass tt-tile" id="dyn-30-alexey">
+<p class="tt-label">За 30 дней</p>
+<p class="tt-value" data-draw="d-last30-alexey" data-source="stats" data-field="last30" data-where="player=alexey">—</p>
+<p class="tt-note"><span data-draw="d-n30-alexey" data-source="stats" data-field="n30" data-where="player=alexey">—</span> игровых дней</p>
+</div>
+<div class="glass tt-tile" id="dyn-ytd-alexey">
+<p class="tt-label">С начала года</p>
+<p class="tt-value" data-draw="d-ytd-alexey" data-source="stats" data-field="ytd" data-where="player=alexey">—</p>
+<p class="tt-note">с <span data-draw="d-start-alexey" data-source="stats" data-field="start_rating" data-where="player=alexey">—</span> · <span data-draw="d-nytd-alexey" data-source="stats" data-field="n_ytd" data-where="player=alexey">—</span> игровых дней</p>
+</div>
+<div class="glass tt-tile" id="dyn-avg-alexey">
+<p class="tt-label">Средний итог турнира</p>
+<p class="tt-value" data-draw="d-avg-alexey" data-source="stats" data-field="avg_delta" data-where="player=alexey">—</p>
+<p class="tt-note">по турнирам в архиве</p>
+</div>
+<div class="glass tt-tile" id="dyn-best-alexey">
+<p class="tt-label">Лучший турнир</p>
+<p class="tt-value tt-good" data-draw="d-best-alexey" data-source="stats" data-field="best" data-where="player=alexey">—</p>
+<p class="tt-note" data-draw="d-bestdate-alexey" data-source="stats" data-field="best_date" data-where="player=alexey">—</p>
+</div>
+<div class="glass tt-tile" id="dyn-worst-alexey">
+<p class="tt-label">Худший турнир</p>
+<p class="tt-value tt-bad" data-draw="d-worst-alexey" data-source="stats" data-field="worst" data-where="player=alexey">—</p>
+<p class="tt-note" data-draw="d-worstdate-alexey" data-source="stats" data-field="worst_date" data-where="player=alexey">—</p>
+</div>
+</section>
+<section class="glass" id="rating-sec-alexey">
+<div class="tt-h" style="margin:0">
+<div><h2>Путь рейтинга</h2><p class="tt-sub">Рейтинг по игровым дням с января. Наведите на график, чтобы увидеть дату и турниры.</p></div>
+<div class="tt-seg" role="group" aria-label="Период" data-ranges="alexey">
+<button type="button" class="on" data-range="all">Всё время</button>
+<button type="button" data-range="180">6 мес</button>
+<button type="button" data-range="60">2 мес</button>
+<button type="button" data-range="30">Месяц</button>
+</div>
+</div>
+<div class="tt-chart" style="min-height:320px" data-draw="rating-alexey" data-source="rating tours"></div>
+</section>
+<section class="glass" id="delta-sec-alexey">
+<h2>Изменение рейтинга после каждого турнира</h2>
+<p class="tt-sub">Каждый столбик — один турнир из архива: вверх — плюс к рейтингу, вниз — минус.</p>
+<div class="tt-chart" style="min-height:220px" data-draw="deltas-alexey" data-source="tours"></div>
+</section>
+<div class="tt-h" id="totals-head-alexey"><h2>Общая статистика</h2></div>
+<section class="tt-tiles" id="kpis-alexey">
+<div class="glass tt-tile" id="kpi-tours-alexey">
+<p class="tt-label">Турниров в архиве</p>
+<p class="tt-value" data-draw="k-tours-alexey" data-source="stats" data-field="tours" data-where="player=alexey">—</p>
+<p class="tt-note">с <span data-draw="k-first-alexey" data-source="stats" data-field="first_tour" data-where="player=alexey">—</span></p>
+</div>
+<div class="glass tt-tile" id="kpi-games-alexey">
+<p class="tt-label">Матчей</p>
+<p class="tt-value" data-draw="k-games-alexey" data-source="stats" data-field="games" data-where="player=alexey">—</p>
+<p class="tt-note"><span data-draw="k-wins-alexey" data-source="stats" data-field="wins" data-where="player=alexey">—</span> побед · <span data-draw="k-losses-alexey" data-source="stats" data-field="losses" data-where="player=alexey">—</span> поражений</p>
+</div>
+<div class="glass tt-tile" id="kpi-winpct-alexey">
+<p class="tt-label">Процент побед</p>
+<p class="tt-value"><span data-draw="k-winpct-alexey" data-source="stats" data-field="win_pct" data-where="player=alexey">—</span><small>%</small></p>
+<p class="tt-note">в турнирах архива</p>
+</div>
+<div class="glass tt-tile" id="kpi-top-alexey">
+<p class="tt-label">Позади в среднем</p>
+<p class="tt-value"><span data-draw="k-top-alexey" data-source="stats" data-field="behind_pct" data-where="player=alexey">—</span><small>%</small></p>
+<p class="tt-note">участников турнира</p>
+</div>
+</section>
+<section class="glass" id="medals-sec-alexey">
+<h2>Призовые места</h2>
+<p class="tt-sub">На подиуме <b data-draw="podium-alexey" data-source="stats" data-field="podium" data-where="player=alexey">—</b> раз из <span data-draw="podium-of-alexey" data-source="stats" data-field="tours" data-where="player=alexey">—</span> турниров в архиве.</p>
+<div class="tt-medals">
+<div class="tt-medal g" id="gold-alexey"><p class="tt-medal-icon">🥇</p><p class="tt-value" data-draw="gold-alexey" data-source="stats" data-field="gold" data-where="player=alexey">—</p><p class="tt-note">1-е места</p></div>
+<div class="tt-medal s" id="silver-alexey"><p class="tt-medal-icon">🥈</p><p class="tt-value" data-draw="silver-alexey" data-source="stats" data-field="silver" data-where="player=alexey">—</p><p class="tt-note">2-е места</p></div>
+<div class="tt-medal b" id="bronze-alexey"><p class="tt-medal-icon">🥉</p><p class="tt-value" data-draw="bronze-alexey" data-source="stats" data-field="bronze" data-where="player=alexey">—</p><p class="tt-note">3-и места</p></div>
+</div>
+</section>
+<section class="glass" id="activity-sec-alexey">
+<h2>Активность по месяцам</h2>
+<p class="tt-sub">Сколько игровых дней было за месяц. Зелёный — рейтинг за месяц вырос, красный — упал.</p>
+<div class="tt-chart" data-draw="monthly-alexey" data-source="monthly"></div>
+</section>
+<section class="glass" id="bands-sec-alexey">
+<h2>Против кого выигрываю</h2>
+<p class="tt-sub">Процент побед по рейтингу соперника. Считается по матчам, сохранённым в архиве, поэтому картина уточняется с каждым турниром.</p>
+<div class="tt-chart" data-draw="bands-alexey" data-source="bands"></div>
+</section>
+<section class="glass" id="recent-sec-alexey">
+<h2>Последние турниры</h2>
+<div class="tt-tablewrap">
+<table class="tt-table" data-source="tours" data-row-key="player,id">
+<thead><tr><th data-field="date">Дата</th><th data-field="name">Турнир</th><th class="r" data-field="place">Место</th><th class="r" data-field="players">Участников</th><th class="r" data-field="wins">В</th><th class="r" data-field="losses">П</th><th class="r" data-field="delta">Δ рейтинга</th><th class="r" data-field="fieldAvg">Ср. рейтинг поля</th></tr></thead>
+<tbody data-draw="recent-alexey"></tbody>
+</table>
+</div>
+</section>
+<section class="tt-grid2" id="people-sec-alexey">
+<div class="glass" id="matches-alexey">
+<h2>Матчи</h2>
+<p class="tt-sub">Сайт показывает матчи только последнего турнира, поэтому они копятся с 22.11.2026.</p>
+<div class="tt-tablewrap">
+<table class="tt-table" data-source="matches" data-row-key="player,tourId,game">
+<thead><tr><th data-field="date">Дата</th><th data-field="opp">Соперник</th><th class="r" data-field="oppRating">Его рейтинг</th><th class="r" data-field="for">Счёт</th><th class="r" data-field="delta">Δ</th></tr></thead>
+<tbody data-draw="matches-alexey"></tbody>
+</table>
+</div>
+</div>
+<div class="glass" id="bestwins-alexey">
+<h2>Лучшие победы</h2>
+<div class="tt-tablewrap">
+<table class="tt-table" data-source="best" data-row-key="player,date,opp">
+<thead><tr><th data-field="date">Дата</th><th data-field="opp">Соперник</th><th class="r" data-field="oppRating">Его рейтинг</th><th class="r" data-field="score">Счёт</th><th class="r" data-field="delta">+ рейтинга</th></tr></thead>
+<tbody data-draw="bestwins-alexey"></tbody>
+</table>
+</div>
+</div>
+</section>
+</div>
+<p class="tt-foot">Данные с topspin-club.ru. Сайт показывает только 10 последних турниров игрока, поэтому архив турниров и матчей копится здесь каждый день с 23.11.2026; история рейтинга — с января 2026 по графику в профиле. Рейтинг на сайте обновляется с задержкой.</p>
+</div>
+</div>
+<script>
+fetch('data.json?v=' + Date.now()).then((r) => r.json()).then((arch) => {
+window.__ARCH = arch;
+(function(){
+const pick = (key) => ({ answer }) => {
+const rows = answer && answer[key];
+if (!Array.isArray(rows)) throw new Error('В архиве нет раздела ' + key);
+return rows;
+};
+dash.loader('players', { description: 'Берёт из архива раздел players.', fn: pick('players') });
+dash.loader('tours', { description: 'Берёт из архива раздел tours.', fn: pick('tours') });
+dash.loader('matches', { description: 'Берёт из архива раздел matches.', fn: pick('matches') });
+dash.loader('rating', { description: 'Берёт из архива раздел rating.', fn: pick('rating') });
+dash.loader('best', { description: 'Берёт из архива раздел best.', fn: pick('best') });
+dash.calc('stats', {
+title: 'Показатели игрока',
+description: 'По каждому игроку: рейтинг и пик, изменения за 10 турниров, 30 дней и с начала года, лучший и худший турнир, победы, медали, доля поля позади.',
+inputs: ['players', 'tours', 'rating'],
+fn: (players, tours, rating) => players.map((p) => {
+const r1 = (v) => Math.round(v * 100) / 100;
+const t = tours.filter((x) => x.player === p.player).sort((a, b) => a.date.localeCompare(b.date));
+const h = rating.filter((x) => x.player === p.player).sort((a, b) => a.date.localeCompare(b.date));
+const last = h.length ? h[h.length - 1].date : null;
+const back = (days) => { const d = new Date(last + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() - days); return d.toISOString().slice(0, 10); };
+const cut30 = last ? back(30) : null;
+const base30 = last ? ([...h].reverse().find((x) => x.date <= cut30) || h[0]) : null;
+const year = last ? last.slice(0, 4) : null;
+const ytdRows = h.filter((x) => x.date.slice(0, 4) === year);
+const peak = h.reduce((a, x) => (!a || x.rating > a.rating ? x : a), null);
+const maxR = Math.max(p.rating, peak ? peak.rating : -Infinity);
+const best = t.reduce((a, x) => (!a || x.delta > a.delta ? x : a), null);
+const worst = t.reduce((a, x) => (!a || x.delta < a.delta ? x : a), null);
+const wins = t.reduce((s, x) => s + (x.wins || 0), 0), losses = t.reduce((s, x) => s + (x.losses || 0), 0);
+const behind = t.filter((x) => x.place && x.players > 1).map((x) => (x.players - x.place) / (x.players - 1));
+return {
+player: p.player, rating: p.rating,
+max_rating: r1(maxR), max_date: peak && peak.rating >= p.rating ? peak.date : (p.checked || last),
+last10: r1(t.slice(-10).reduce((s, x) => s + (x.delta || 0), 0)),
+last30: base30 ? r1(p.rating - base30.rating) : null,
+n30: h.filter((x) => x.date > cut30).length,
+ytd: ytdRows.length ? r1(p.rating - ytdRows[0].rating) : null,
+start_rating: ytdRows.length ? ytdRows[0].rating : null,
+n_ytd: ytdRows.length,
+avg_delta: t.length ? r1(t.reduce((s, x) => s + (x.delta || 0), 0) / t.length) : null,
+best: best ? best.delta : null, best_date: best ? best.date : null, best_name: best ? best.name : null,
+worst: worst ? worst.delta : null, worst_date: worst ? worst.date : null, worst_name: worst ? worst.name : null,
+tours: t.length, first_tour: t.length ? t[0].date : null,
+games: wins + losses, wins, losses,
+win_pct: wins + losses ? Math.round((wins / (wins + losses)) * 1000) / 10 : null,
+behind_pct: behind.length ? Math.round((behind.reduce((s, v) => s + v, 0) / behind.length) * 100) : null,
+gold: t.filter((x) => x.place === 1).length, silver: t.filter((x) => x.place === 2).length,
+bronze: t.filter((x) => x.place === 3).length, podium: t.filter((x) => x.place && x.place <= 3).length,
+};
+}),
+});
+dash.calc('monthly', {
+title: 'Игровые дни по месяцам',
+description: 'По каждому игроку и месяцу: сколько дат в истории рейтинга и насколько рейтинг изменился за месяц.',
+inputs: ['rating'],
+fn: (rating) => {
+const out = [];
+d3.group(rating, (r) => r.player).forEach((rows, player) => {
+const h = [...rows].sort((a, b) => a.date.localeCompare(b.date));
+if (!h.length) return;
+const by = d3.group(h, (r) => r.date.slice(0, 7));
+const first = d3.utcParse('%Y-%m')(h[0].date.slice(0, 7));
+const lastM = d3.utcParse('%Y-%m')(h[h.length - 1].date.slice(0, 7));
+let prev = h[0].rating;
+d3.utcMonth.range(first, d3.utcMonth.offset(lastM, 1)).forEach((m) => {
+const k = d3.utcFormat('%Y-%m')(m);
+const rs = by.get(k) || [];
+const end = rs.length ? rs[rs.length - 1].rating : prev;
+out.push({ player, month: k, days: rs.length, delta: Math.round((end - prev) * 100) / 100 });
+prev = end;
+});
+});
+return out;
+},
+});
+dash.calc('bands', {
+title: 'Победы по рейтингу соперника',
+description: 'По каждому игроку: матчи и процент побед в диапазонах рейтинга соперника, по матчам из архива.',
+inputs: ['matches'],
+fn: (matches) => {
+const bands = [['до 200', 0, 200], ['200–300', 200, 300], ['300–400', 300, 400], ['400+', 400, 1e9]];
+const out = [];
+['igor', 'alexey'].forEach((player) => {
+const ms = matches.filter((m) => m.player === player && m.oppRating != null);
+bands.forEach(([band, lo, hi]) => {
+const b = ms.filter((m) => m.oppRating >= lo && m.oppRating < hi);
+if (!b.length) return;
+const wins = b.filter((m) => m.for > m.against).length;
+out.push({ player, band, games: b.length, wins, losses: b.length - wins, win_pct: Math.round((wins / b.length) * 1000) / 10 });
+});
+});
+return out;
+},
+});
+})();
+(function(){
+const C = {green: '#32d74b', red: '#ff6961', blue: '#0a84ff', indigo: '#7d7aff', teal: '#64d2ff', grid: 'rgba(255,255,255,.07)'};
+const motionOK = () => window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+window.ttAnimDone = window.ttAnimDone || {};
+const firstAnim = (name) => { if (window.ttAnimDone[name] || !motionOK()) return false; window.ttAnimDone[name] = true; return true; };
+const fmtDate = (s) => { const d = s && d3.utcParse('%Y-%m-%d')(s); return d ? d3.utcFormat('%d.%m.%Y')(d) : (s || '—'); };
+const ru = (v) => String(v).replace('.', ',');
+const num = (v) => (v == null || Number.isNaN(+v) ? '—' : ru(Math.round(+v * 100) / 100));
+const signed = (v) => (v == null ? '—' : (v > 0 ? '+' : v < 0 ? '−' : '') + ru(Math.round(Math.abs(v) * 100) / 100));
+const goodBad = (v) => (+v > 0 ? 'tt-good' : +v < 0 ? 'tt-bad' : '');
+const WHO = ['igor', 'alexey'];
+/* Tabs */
+const showTab = (who) => {
+if (!WHO.includes(who)) who = 'igor';
+document.querySelectorAll('[data-tab]').forEach((b) => b.classList.toggle('on', b.getAttribute('data-tab') === who));
+WHO.forEach((w) => document.querySelectorAll('#tab-' + w).forEach((s) => { s.hidden = w !== who; }));
+};
+document.querySelectorAll('[data-tab]').forEach((b) => b.addEventListener('click', () => {
+const who = b.getAttribute('data-tab'); showTab(who); dash.setLink(who);
+}));
+showTab((location.hash || '').replace('#', ''));
+window.ttRange = window.ttRange || {};
+document.querySelectorAll('[data-ranges]').forEach((seg) => {
+const who = seg.getAttribute('data-ranges');
+seg.querySelectorAll('[data-range]').forEach((b) => b.addEventListener('click', () => {
+window.ttRange[who] = b.getAttribute('data-range');
+seg.querySelectorAll('[data-range]').forEach((x) => x.classList.toggle('on', x === b));
+window.ttAnimDone['rating-' + who] = false;
+dash.draw('rating-' + who);
+}));
+});
+function msg(el, s) { const p = document.createElement('p'); p.className = 'tt-sub'; p.textContent = s; el.replaceChildren(p); }
+function notOk(el, d) { if (d.status === 'ok') return false; msg(el, d.status === 'error' ? 'Не удалось загрузить данные.' : '—'); return true; }
+function tipPos(tip, box, x, y) {
+const w = tip.offsetWidth, W = box.clientWidth;
+tip.style.left = Math.max(0, Math.min(W - w, x - w / 2)) + 'px';
+tip.style.top = Math.max(-8, y - tip.offsetHeight - 14) + 'px';
+}
+function tipLines(tip, a, b, rest) {
+tip.replaceChildren();
+const s1 = document.createElement('small'); s1.textContent = a;
+const s2 = document.createElement('b'); s2.textContent = b; s2.style.display = 'block';
+tip.append(s1, s2);
+(rest || []).forEach((c) => { const s3 = document.createElement('small'); s3.textContent = c; tip.append(s3); });
+}
+function yGrid(svg, y, x0, x1, ticks) {
+const g = svg.append('g');
+y.ticks(ticks).forEach((v) => {
+g.append('line').attr('x1', x0).attr('x2', x1).attr('y1', y(v)).attr('y2', y(v)).attr('stroke', C.grid);
+g.append('text').attr('x', x0 - 8).attr('y', y(v) + 4).attr('text-anchor', 'end').text(v);
+});
+}
+function td(tr, v, cls) { const c = document.createElement('td'); c.textContent = v == null ? '—' : v; if (cls) c.className = cls; tr.append(c); return c; }
+WHO.forEach((P) => {
+const row = () => { const d = dash.data('stats'); return d.status === 'ok' ? d.data.find((r) => r.player === P) : null; };
+const text = (name, field, fmt, cls) => dash.draw(name + '-' + P, (el) => {
+const r = row();
+if (!r) { el.textContent = '—'; return; }
+const v = r[field];
+el.textContent = v == null ? '—' : fmt ? fmt(v, r) : String(v);
+if (cls) { el.classList.remove('tt-good', 'tt-bad'); const c = cls(v); if (c) el.classList.add(c); }
+});
+text('lede-rating', 'rating', num);
+text('lede-max', 'max_rating', num);
+text('lede-30', 'last30', signed, goodBad);
+text('lede-ytd', 'ytd', signed, goodBad);
+text('lede-10', 'last10', signed, goodBad);
+text('d-rating', 'rating', num);
+text('d-max', 'max_rating', num);
+text('d-maxdate', 'max_date', fmtDate);
+text('d-last10', 'last10', signed, goodBad);
+text('d-last30', 'last30', signed, goodBad);
+text('d-n30', 'n30');
+text('d-ytd', 'ytd', signed, goodBad);
+text('d-start', 'start_rating', num);
+text('d-nytd', 'n_ytd');
+text('d-avg', 'avg_delta', signed, goodBad);
+text('d-best', 'best', signed);
+text('d-bestdate', 'best_date', (v, r) => fmtDate(v) + ' · ' + r.best_name);
+text('d-worst', 'worst', signed);
+text('d-worstdate', 'worst_date', (v, r) => fmtDate(v) + ' · ' + r.worst_name);
+text('k-tours', 'tours');
+text('k-first', 'first_tour', fmtDate);
+text('k-games', 'games');
+text('k-wins', 'wins');
+text('k-losses', 'losses');
+text('k-winpct', 'win_pct', ru);
+text('k-top', 'behind_pct');
+text('podium', 'podium');
+text('podium-of', 'tours');
+text('gold', 'gold');
+text('silver', 'silver');
+text('bronze', 'bronze');
+/* Rating path */
+dash.draw('rating-' + P, (el) => {
+const d = dash.data('rating'), tdata = dash.data('tours');
+if (notOk(el, d)) return;
+const parse = d3.utcParse('%Y-%m-%d');
+let rows = d.data.filter((r) => r.player === P).map((r) => ({...r, rating: +r.rating, dt: parse(r.date)})).sort((a, b) => a.dt - b.dt);
+if (!rows.length) { msg(el, 'Истории рейтинга пока нет.'); return; }
+const range = window.ttRange[P] || 'all';
+if (range !== 'all') { const cut = d3.utcDay.offset(rows[rows.length - 1].dt, -+range); const f = rows.filter((x) => x.dt >= cut); if (f.length > 1) rows = f; }
+const toursByDate = d3.group((tdata.status === 'ok' ? tdata.data : []).filter((t) => t.player === P), (t) => t.date);
+const W = el.clientWidth || 600, H = 320, m = {t: 30, r: 44, b: 28, l: 38};
+const x = d3.scaleUtc().domain(d3.extent(rows, (r) => r.dt)).range([m.l, W - m.r]);
+const y = d3.scaleLinear().domain([d3.min(rows, (r) => r.rating) - 8, d3.max(rows, (r) => r.rating) + 14]).nice().range([H - m.b, m.t]);
+const svg = d3.create('svg').attr('width', '100%').attr('height', H).attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', 'Рейтинг по игровым дням');
+const uid = P + Math.random().toString(36).slice(2, 7);
+const defs = svg.append('defs');
+const ga = defs.append('linearGradient').attr('id', 'a' + uid).attr('x1', 0).attr('x2', 0).attr('y1', 0).attr('y2', 1);
+ga.append('stop').attr('offset', '0%').attr('stop-color', C.indigo).attr('stop-opacity', 0.45);
+ga.append('stop').attr('offset', '60%').attr('stop-color', C.teal).attr('stop-opacity', 0.08);
+ga.append('stop').attr('offset', '100%').attr('stop-color', C.teal).attr('stop-opacity', 0);
+const gl = defs.append('linearGradient').attr('id', 'l' + uid).attr('x1', 0).attr('x2', 1).attr('y1', 0).attr('y2', 0);
+gl.append('stop').attr('offset', '0%').attr('stop-color', C.indigo);
+gl.append('stop').attr('offset', '55%').attr('stop-color', C.blue);
+gl.append('stop').attr('offset', '100%').attr('stop-color', C.teal);
+const glow = defs.append('filter').attr('id', 'g' + uid).attr('x', '-20%').attr('y', '-20%').attr('width', '140%').attr('height', '140%');
+glow.append('feGaussianBlur').attr('stdDeviation', 5).attr('result', 'b');
+const mg = glow.append('feMerge'); mg.append('feMergeNode').attr('in', 'b'); mg.append('feMergeNode').attr('in', 'SourceGraphic');
+yGrid(svg, y, m.l, W - m.r, 5);
+const xa = svg.append('g').attr('transform', `translate(0,${H - m.b + 6})`).call(d3.axisBottom(x).ticks(Math.max(2, Math.floor(W / 120))).tickFormat(d3.utcFormat('%d.%m')).tickSize(0).tickPadding(6));
+xa.select('.domain').remove();
+const area = svg.append('path').datum(rows).attr('fill', `url(#a${uid})`).attr('d', d3.area().x((r) => x(r.dt)).y0(H - m.b).y1((r) => y(r.rating)));
+const line = svg.append('path').datum(rows).attr('fill', 'none').attr('stroke', `url(#l${uid})`).attr('stroke-width', 2.6).attr('stroke-linecap', 'round').attr('stroke-linejoin', 'round').attr('filter', `url(#g${uid})`).attr('d', d3.line().x((r) => x(r.dt)).y((r) => y(r.rating)));
+const peak = rows.reduce((a, r) => (r.rating > a.rating ? r : a), rows[0]);
+const lastR = rows[rows.length - 1];
+const marks = svg.append('g');
+if (peak.rating > lastR.rating + 0.5 && Math.abs(x(peak.dt) - x(lastR.dt)) > 60) {
+marks.append('circle').attr('cx', x(peak.dt)).attr('cy', y(peak.rating)).attr('r', 9).attr('fill', C.green).attr('opacity', 0.18);
+marks.append('circle').attr('cx', x(peak.dt)).attr('cy', y(peak.rating)).attr('r', 4).attr('fill', C.green);
+marks.append('text').attr('class', 'tt-lbl').attr('x', x(peak.dt)).attr('y', y(peak.rating) - 14).attr('text-anchor', 'middle').text('пик ' + Math.round(peak.rating));
+}
+marks.append('circle').attr('cx', x(lastR.dt)).attr('cy', y(lastR.rating)).attr('r', 9).attr('fill', C.teal).attr('opacity', 0.2);
+marks.append('circle').attr('cx', x(lastR.dt)).attr('cy', y(lastR.rating)).attr('r', 4).attr('fill', '#fff');
+marks.append('text').attr('class', 'tt-lbl').attr('x', x(lastR.dt) + 10).attr('y', y(lastR.rating) + 4).text(Math.round(lastR.rating));
+const tip = document.createElement('div'); tip.className = 'tt-tip'; tip.hidden = true;
+const guide = svg.append('line').attr('y1', m.t).attr('y2', H - m.b).attr('stroke', 'rgba(255,255,255,.25)').attr('stroke-dasharray', '2 4').style('display', 'none');
+const dot = svg.append('circle').attr('r', 5).attr('fill', '#fff').attr('stroke', C.blue).attr('stroke-width', 2.5).style('display', 'none');
+const bis = d3.bisector((r) => r.dt).center;
+svg.append('rect').attr('x', m.l).attr('y', 0).attr('width', W - m.l - m.r).attr('height', H).attr('fill', 'transparent')
+.on('pointermove', (ev) => {
+const [px] = d3.pointer(ev); const i = bis(rows, x.invert(px)); const r = rows[i];
+const prev = rows[i - 1];
+guide.style('display', null).attr('x1', x(r.dt)).attr('x2', x(r.dt));
+dot.style('display', null).attr('cx', x(r.dt)).attr('cy', y(r.rating));
+tip.hidden = false;
+const ts = (toursByDate.get(r.date) || []).map((t) => t.name + ': ' + t.place + ' из ' + t.players + ' · ' + signed(t.delta));
+tipLines(tip, fmtDate(r.date), 'Рейтинг ' + num(r.rating) + (prev ? '  ' + signed(r.rating - prev.rating) : ''), ts);
+tipPos(tip, el, x(r.dt) * el.clientWidth / W, y(r.rating) * el.clientWidth / W);
+})
+.on('pointerleave', () => { tip.hidden = true; dot.style('display', 'none'); guide.style('display', 'none'); });
+el.replaceChildren(svg.node(), tip);
+if (firstAnim('rating-' + P)) {
+const len = line.node().getTotalLength();
+line.attr('stroke-dasharray', `${len} ${len}`).attr('stroke-dashoffset', len).transition().duration(1400).ease(d3.easeCubicInOut).attr('stroke-dashoffset', 0).on('end', () => line.attr('stroke-dasharray', null));
+area.attr('opacity', 0).transition().delay(500).duration(1000).ease(d3.easeCubicOut).attr('opacity', 1);
+marks.attr('opacity', 0).transition().delay(1200).duration(500).attr('opacity', 1);
+}
+});
+/* Delta per tournament */
+dash.draw('deltas-' + P, (el) => {
+const d = dash.data('tours');
+if (notOk(el, d)) return;
+const parse = d3.utcParse('%Y-%m-%d');
+const rows = d.data.filter((r) => r.player === P).map((r) => ({...r, delta: +r.delta, dt: parse(r.date)})).sort((a, b) => a.dt - b.dt || a.id.localeCompare(b.id));
+if (!rows.length) { msg(el, 'Турниров пока нет.'); return; }
+const W = el.clientWidth || 600, H = 220, m = {t: 14, r: 10, b: 26, l: 38};
+const x = d3.scaleBand().domain(rows.map((r) => r.id)).range([m.l, W - m.r]).paddingInner(rows.length > 120 ? 0.15 : 0.3);
+const ext = d3.max(rows, (r) => Math.abs(r.delta)) || 1;
+const y = d3.scaleLinear().domain([-ext, ext]).nice().range([H - m.b, m.t]);
+const svg = d3.create('svg').attr('width', '100%').attr('height', H).attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', 'Изменение рейтинга после каждого турнира');
+yGrid(svg, y, m.l, W - m.r, 4);
+svg.append('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', y(0)).attr('y2', y(0)).attr('stroke', 'rgba(255,255,255,.25)');
+let lastX = -Infinity;
+const shown = rows.filter((r, i) => { const px = x(r.id); if ((i && r.date === rows[i - 1].date) || px - lastX < 46) return false; lastX = px; return true; });
+svg.append('g').selectAll('text').data(shown).join('text').attr('x', (r) => x(r.id)).attr('y', H - 6).text((r) => d3.utcFormat('%d.%m')(r.dt));
+const bw = Math.max(1, x.bandwidth());
+const rad = Math.min(3, bw / 2);
+const bars = svg.append('g').selectAll('rect').data(rows).join('rect')
+.attr('x', (r) => x(r.id)).attr('width', bw).attr('rx', rad)
+.attr('fill', (r) => (r.delta >= 0 ? C.green : C.red)).attr('opacity', 0.9);
+const setH = (sel) => sel.attr('y', (r) => Math.min(y(0), y(r.delta))).attr('height', (r) => Math.max(1, Math.abs(y(r.delta) - y(0))));
+const tip = document.createElement('div'); tip.className = 'tt-tip'; tip.hidden = true;
+bars.on('pointerenter', (ev, r) => {
+bars.attr('opacity', (b) => (b === r ? 1 : 0.45));
+tip.hidden = false;
+tipLines(tip, fmtDate(r.date) + ' · ' + r.name, signed(r.delta), [r.place + ' место из ' + r.players + ' · матчи ' + r.wins + '–' + r.losses]);
+tipPos(tip, el, (x(r.id) + bw / 2) * el.clientWidth / W, Math.min(y(0), y(r.delta)) * el.clientWidth / W);
+}).on('pointerleave', () => { tip.hidden = true; bars.attr('opacity', 0.9); });
+el.replaceChildren(svg.node(), tip);
+if (firstAnim('deltas-' + P)) {
+bars.attr('y', y(0)).attr('height', 0).transition().delay((r, i) => i * Math.min(40, 900 / rows.length)).duration(600).ease(d3.easeBackOut.overshoot(1.2)).call(setH);
+} else setH(bars);
+});
+/* Monthly */
+dash.draw('monthly-' + P, (el) => {
+const d = dash.data('monthly');
+if (notOk(el, d)) return;
+const rows = d.data.filter((r) => r.player === P), parse = d3.utcParse('%Y-%m');
+if (!rows.length) { msg(el, 'Пока нет данных.'); return; }
+const W = el.clientWidth || 600, H = 220, m = {t: 10, r: 8, b: 26, l: 30};
+const x = d3.scaleBand().domain(rows.map((r) => r.month)).range([m.l, W - m.r]).padding(0.22);
+const y = d3.scaleLinear().domain([0, d3.max(rows, (r) => r.days) || 1]).nice().range([H - m.b, m.t]);
+const svg = d3.create('svg').attr('width', '100%').attr('height', H).attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', 'Игровые дни по месяцам');
+yGrid(svg, y, m.l, W - m.r, 4);
+const mon = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+const every = W < 480 ? 2 : 1;
+svg.append('g').selectAll('text').data(rows.filter((r, i) => i % every === 0)).join('text').attr('x', (r) => x(r.month) + x.bandwidth() / 2).attr('text-anchor', 'middle').attr('y', H - 6).text((r) => mon[+r.month.slice(5, 7) - 1]);
+const tip = document.createElement('div'); tip.className = 'tt-tip'; tip.hidden = true;
+const bw = x.bandwidth();
+const bars = svg.append('g').selectAll('rect').data(rows.filter((r) => r.days > 0)).join('rect')
+.attr('x', (r) => x(r.month)).attr('width', bw).attr('rx', Math.min(4, bw / 2))
+.attr('fill', (r) => (r.delta >= 0 ? C.green : C.red)).attr('opacity', 0.88);
+bars.on('pointerenter', (ev, r) => {
+bars.attr('opacity', (b) => (b === r ? 1 : 0.4));
+tip.hidden = false;
+tipLines(tip, d3.utcFormat('%m.%Y')(parse(r.month)), r.days + ' игровых дней', ['рейтинг за месяц ' + signed(r.delta)]);
+tipPos(tip, el, (x(r.month) + bw / 2) * el.clientWidth / W, y(r.days) * el.clientWidth / W);
+}).on('pointerleave', () => { tip.hidden = true; bars.attr('opacity', 0.88); });
+el.replaceChildren(svg.node(), tip);
+const setH = (s) => s.attr('y', (r) => y(r.days)).attr('height', (r) => y(0) - y(r.days));
+if (firstAnim('monthly-' + P)) bars.attr('y', y(0)).attr('height', 0).transition().delay((r, i) => i * 40).duration(700).ease(d3.easeCubicOut).call(setH);
+else setH(bars);
+});
+/* Bands */
+dash.draw('bands-' + P, (el) => {
+const d = dash.data('bands');
+if (notOk(el, d)) return;
+const rows = d.data.filter((r) => r.player === P);
+if (!rows.length) { msg(el, 'Матчей в архиве пока нет.'); return; }
+const W = el.clientWidth || 400, rowH = 36, m = {t: 2, r: 104, b: 2, l: 70}, H = m.t + m.b + rows.length * rowH;
+const x = d3.scaleLinear().domain([0, 100]).range([m.l, W - m.r]);
+const svg = d3.create('svg').attr('width', '100%').attr('height', H).attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', 'Процент побед по рейтингу соперника');
+svg.append('line').attr('x1', x(50)).attr('x2', x(50)).attr('y1', 0).attr('y2', H).attr('stroke', 'rgba(255,255,255,.22)').attr('stroke-dasharray', '2 4');
+const g = svg.append('g').selectAll('g').data(rows).join('g').attr('transform', (r, i) => `translate(0,${m.t + i * rowH})`);
+g.append('text').attr('x', m.l - 10).attr('y', rowH / 2 + 4).attr('text-anchor', 'end').text((r) => r.band);
+g.append('rect').attr('x', m.l).attr('y', 10).attr('height', rowH - 20).attr('width', W - m.l - m.r).attr('rx', (rowH - 20) / 2).attr('fill', 'rgba(255,255,255,.06)');
+const bar = g.append('rect').attr('x', m.l).attr('y', 10).attr('height', rowH - 20).attr('rx', (rowH - 20) / 2)
+.attr('fill', (r) => (r.win_pct >= 50 ? C.green : r.win_pct >= 30 ? C.blue : C.red));
+g.append('text').attr('class', 'tt-lbl').attr('x', W - m.r + 10).attr('y', rowH / 2 + 4).text((r) => ru(r.win_pct) + '%');
+g.append('text').attr('x', W - m.r + 56).attr('y', rowH / 2 + 4).text((r) => r.wins + '–' + r.losses);
+el.replaceChildren(svg.node());
+const w = (r) => Math.max(rowH - 20, x(r.win_pct) - m.l);
+if (firstAnim('bands-' + P)) bar.attr('width', 0).transition().delay((r, i) => 80 * i).duration(800).ease(d3.easeCubicOut).attr('width', w);
+else bar.attr('width', w);
+});
+/* Tables */
+dash.draw('recent-' + P, (el) => {
+const d = dash.data('tours');
+if (d.status !== 'ok') { el.replaceChildren(); return; }
+const rows = d.data.filter((r) => r.player === P).sort((a, b) => b.date.localeCompare(a.date));
+el.replaceChildren(...rows.map((r) => {
+const tr = document.createElement('tr'); tr.dataset.key = encodeURIComponent(r.player) + ',' + encodeURIComponent(r.id);
+td(tr, fmtDate(r.date)); td(tr, r.name);
+const p = td(tr, r.place, 'r'); if (+r.place <= 3) p.textContent = ['🥇', '🥈', '🥉'][+r.place - 1] + ' ' + r.place;
+td(tr, r.players, 'r'); td(tr, r.wins, 'r'); td(tr, r.losses, 'r');
+const c = td(tr, signed(+r.delta), 'r'); if (+r.delta) c.classList.add(+r.delta > 0 ? 'tt-good' : 'tt-bad');
+td(tr, r.fieldAvg == null ? '—' : Math.round(r.fieldAvg), 'r');
+return tr;
+}));
+});
+dash.draw('matches-' + P, (el) => {
+const d = dash.data('matches');
+if (d.status !== 'ok') { el.replaceChildren(); return; }
+const rows = d.data.filter((r) => r.player === P).sort((a, b) => b.date.localeCompare(a.date) || a.game - b.game);
+el.replaceChildren(...rows.map((r) => {
+const tr = document.createElement('tr'); tr.dataset.key = [r.player, r.tourId, r.game].map((v) => encodeURIComponent(String(v))).join(',');
+td(tr, fmtDate(r.date)); td(tr, r.opp); td(tr, num(r.oppRating), 'r');
+const s = td(tr, r.for + ':' + r.against, 'r'); s.classList.add(r.for > r.against ? 'tt-good' : 'tt-bad');
+const c = td(tr, signed(+r.delta), 'r'); if (+r.delta) c.classList.add(+r.delta > 0 ? 'tt-good' : 'tt-bad');
+return tr;
+}));
+});
+dash.draw('bestwins-' + P, (el) => {
+const d = dash.data('best');
+if (d.status !== 'ok') { el.replaceChildren(); return; }
+const rows = d.data.filter((r) => r.player === P).sort((a, b) => b.delta - a.delta);
+el.replaceChildren(...rows.map((r) => {
+const tr = document.createElement('tr'); tr.dataset.key = [r.player, r.date, r.opp].map((v) => encodeURIComponent(String(v))).join(',');
+td(tr, fmtDate(r.date)); td(tr, r.opp); td(tr, num(r.oppRating), 'r'); td(tr, r.score, 'r');
+td(tr, signed(+r.delta), 'r tt-good');
+return tr;
+}));
+});
+});
+})();
+window.__drawAll();
+document.querySelectorAll('[data-tab]').forEach((b) => b.addEventListener('click', () => setTimeout(window.__drawAll, 0)));
+let __rt; window.addEventListener('resize', () => { clearTimeout(__rt); __rt = setTimeout(window.__drawAll, 200); });
+}).catch((e) => { console.error(e); const p = document.createElement('p'); p.className = 'tt-sub'; p.textContent = 'Не удалось загрузить данные. Обновите страницу.'; document.querySelector('.tt').prepend(p); });
+</script></body></html>
