@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Статистика Игоря и Алексея Лихобабиных, «Арена Топ-Спин»"><title>Игорь и папа — настольный теннис</title>
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Статистика Игоря, Алексея и Бориса Лихобабиных, «Арена Топ-Спин»"><title>Лихобабины — настольный теннис</title>
 <style>html,body{margin:0;background:#07080c;} @page { margin: 0; }</style>
 <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
 <script>window.d3 || document.write('<script src="https://unpkg.com/d3@7.9.0/dist/d3.min.js"><\/script>')</script>
@@ -139,6 +139,14 @@ background: linear-gradient(100deg, #fff 15%, #c9c8ff 60%, #9be3ff 100%); -webki
 .tt-match-score { font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .tt-match-delta { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
 .tt-last-link { display: inline-block; margin-top: 12px; font-size: 12.5px; color: var(--teal); text-decoration: none; }
+.tt-topbar { display: flex; align-items: center; justify-content: space-between; gap: 10px 14px; flex-wrap: wrap; padding: 6px 6px 6px 16px; border-radius: 999px;
+background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
+-webkit-backdrop-filter: blur(24px) saturate(160%); backdrop-filter: blur(24px) saturate(160%); }
+.tt-upd { font-size: 12.5px; color: var(--muted); display: inline-flex; align-items: center; gap: 8px; }
+.tt-upd b { color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }
+.tt-upd-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px rgba(50,215,75,.8); }
+.tt-topbar .tt-seg.big button { padding: 8px 16px; }
+@media (max-width: 520px) { .tt-topbar { border-radius: 22px; padding: 10px; justify-content: center; } .tt-topbar .tt-seg.big button { padding: 8px 12px; font-size: 14px; } }
 @media (prefers-reduced-motion: no-preference) {
 .glass { transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease; }
 .tt-tile:hover { transform: translateY(-2px); }
@@ -146,10 +154,12 @@ background: linear-gradient(100deg, #fff 15%, #c9c8ff 60%, #9be3ff 100%); -webki
 </style>
 <div class="tt">
 <div class="tt-blob"></div><div class="tt-blob2"></div>
-<div class="tt-top" id="tabs">
+<div class="tt-topbar" id="tabs">
+<span class="tt-upd"><span class="tt-upd-dot"></span>Обновлено <b data-draw="upd-at" data-source="players" data-field="updated">—</b></span>
 <div class="tt-seg big" role="tablist" aria-label="Игрок">
 <button type="button" class="on" data-tab="igor">Игорь</button>
 <button type="button" data-tab="alexey">Папа</button>
+<button type="button" data-tab="boris">Борис TTW</button>
 </div>
 </div>
 <div class="tt-tab" id="tab-igor">
@@ -169,7 +179,6 @@ background: linear-gradient(100deg, #fff 15%, #c9c8ff 60%, #9be3ff 100%); -webki
 <ul class="tt-chips">
 <li>Санкт-Петербург</li>
 <li>Клуб: <span>«Арена Топ-Спин»</span></li>
-<li>Обновлено: <span data-draw="updated-igor" data-source="players" data-field="checked" data-where="player=igor">—</span></li>
 <li><a href="https://topspin-club.ru/players/eltokkutmdbx" target="_blank" rel="noopener">Профиль на topspin-club.ru ↗</a></li>
 </ul>
 </header>
@@ -323,7 +332,6 @@ background: linear-gradient(100deg, #fff 15%, #c9c8ff 60%, #9be3ff 100%); -webki
 <ul class="tt-chips">
 <li>Санкт-Петербург</li>
 <li>Клуб: <span>«Арена Топ-Спин»</span></li>
-<li>Обновлено: <span data-draw="updated-alexey" data-source="players" data-field="checked" data-where="player=alexey">—</span></li>
 <li><a href="https://topspin-club.ru/players/qhpduqstqyud" target="_blank" rel="noopener">Профиль на topspin-club.ru ↗</a></li>
 </ul>
 </header>
@@ -460,6 +468,158 @@ background: linear-gradient(100deg, #fff 15%, #c9c8ff 60%, #9be3ff 100%); -webki
 </div>
 </section>
 </div>
+<div class="tt-tab" id="tab-boris" hidden>
+<header class="tt-head tt-hero" id="head-boris">
+<p class="tt-kicker">Настольный теннис · «Арена Топ-Спин»</p>
+<h1 class="tt-title">Борис Лихобабин</h1>
+<div class="glass tt-hero-card" id="hero-boris">
+<p class="tt-label">Рейтинг сейчас</p>
+<p class="tt-hero-num" data-draw="lede-rating-boris">—</p>
+<div class="tt-hero-stats">
+<div class="tt-hero-stat"><span>Пик</span><b data-draw="lede-max-boris">—</b></div>
+<div class="tt-hero-stat"><span>За 30 дней</span><b data-draw="lede-30-boris">—</b></div>
+<div class="tt-hero-stat"><span>С начала года</span><b data-draw="lede-ytd-boris">—</b></div>
+<div class="tt-hero-stat"><span>За 10 турниров</span><b data-draw="lede-10-boris">—</b></div>
+</div>
+</div>
+<ul class="tt-chips">
+<li>Клуб: <span>«Арена Топ-Спин»</span></li>
+<li><a href="https://topspin-club.ru/players/kmekkwdbvzmj" target="_blank" rel="noopener">Профиль на topspin-club.ru ↗</a></li>
+</ul>
+</header>
+<div class="tt-h" id="dyn-head-boris"><h2>Динамика рейтинга</h2></div>
+<section class="tt-tiles" id="dyn-boris">
+<div class="glass tt-tile" id="dyn-rating-boris">
+<p class="tt-label">Текущий рейтинг</p>
+<p class="tt-value" data-draw="d-rating-boris" data-source="stats" data-field="rating" data-where="player=boris">—</p>
+<p class="tt-note">пик <span data-draw="d-max-boris" data-source="stats" data-field="max_rating" data-where="player=boris">—</span> · <span data-draw="d-maxdate-boris" data-source="stats" data-field="max_date" data-where="player=boris">—</span></p>
+</div>
+<div class="glass tt-tile" id="dyn-last10-boris">
+<p class="tt-label">За 10 турниров</p>
+<p class="tt-value" data-draw="d-last10-boris" data-source="stats" data-field="last10" data-where="player=boris">—</p>
+<p class="tt-note">сумма изменений</p>
+</div>
+<div class="glass tt-tile" id="dyn-30-boris">
+<p class="tt-label">За 30 дней</p>
+<p class="tt-value" data-draw="d-last30-boris" data-source="stats" data-field="last30" data-where="player=boris">—</p>
+<p class="tt-note"><span data-draw="d-n30-boris" data-source="stats" data-field="n30" data-where="player=boris">—</span> игровых дней</p>
+</div>
+<div class="glass tt-tile" id="dyn-ytd-boris">
+<p class="tt-label">С начала года</p>
+<p class="tt-value" data-draw="d-ytd-boris" data-source="stats" data-field="ytd" data-where="player=boris">—</p>
+<p class="tt-note">с <span data-draw="d-start-boris" data-source="stats" data-field="start_rating" data-where="player=boris">—</span> · <span data-draw="d-nytd-boris" data-source="stats" data-field="n_ytd" data-where="player=boris">—</span> игровых дней</p>
+</div>
+<div class="glass tt-tile" id="dyn-avg-boris">
+<p class="tt-label">Средний итог турнира</p>
+<p class="tt-value" data-draw="d-avg-boris" data-source="stats" data-field="avg_delta" data-where="player=boris">—</p>
+<p class="tt-note">по турнирам в архиве</p>
+</div>
+<div class="glass tt-tile" id="dyn-best-boris">
+<p class="tt-label">Лучший турнир</p>
+<p class="tt-value tt-good" data-draw="d-best-boris" data-source="stats" data-field="best" data-where="player=boris">—</p>
+<p class="tt-note" data-draw="d-bestdate-boris" data-source="stats" data-field="best_date" data-where="player=boris">—</p>
+</div>
+<div class="glass tt-tile" id="dyn-worst-boris">
+<p class="tt-label">Худший турнир</p>
+<p class="tt-value tt-bad" data-draw="d-worst-boris" data-source="stats" data-field="worst" data-where="player=boris">—</p>
+<p class="tt-note" data-draw="d-worstdate-boris" data-source="stats" data-field="worst_date" data-where="player=boris">—</p>
+</div>
+</section>
+<section class="glass" id="last-sec-boris">
+<h2>Последний турнир</h2>
+<p class="tt-sub" data-draw="last-sub-boris" data-source="matches tours">—</p>
+<div data-draw="last-boris" data-source="matches tours"></div>
+</section>
+<section class="glass" id="rating-sec-boris">
+<div class="tt-h" style="margin:0">
+<div><h2>Путь рейтинга</h2><p class="tt-sub">Рейтинг по игровым дням с января. Наведите на график, чтобы увидеть дату и турниры.</p></div>
+<div class="tt-seg" role="group" aria-label="Период" data-ranges="boris">
+<button type="button" class="on" data-range="all">Всё время</button>
+<button type="button" data-range="180">6 мес</button>
+<button type="button" data-range="60">2 мес</button>
+<button type="button" data-range="30">Месяц</button>
+</div>
+</div>
+<div class="tt-chart" style="min-height:320px" data-draw="rating-boris" data-source="rating tours"></div>
+</section>
+<section class="glass" id="delta-sec-boris">
+<h2>Изменение рейтинга после каждого турнира</h2>
+<p class="tt-sub">Каждый столбик — один турнир из архива: вверх — плюс к рейтингу, вниз — минус.</p>
+<div class="tt-chart" style="min-height:220px" data-draw="deltas-boris" data-source="tours"></div>
+</section>
+<div class="tt-h" id="totals-head-boris"><h2>Общая статистика</h2></div>
+<section class="tt-tiles" id="kpis-boris">
+<div class="glass tt-tile" id="kpi-tours-boris">
+<p class="tt-label">Турниров в архиве</p>
+<p class="tt-value" data-draw="k-tours-boris" data-source="stats" data-field="tours" data-where="player=boris">—</p>
+<p class="tt-note">с <span data-draw="k-first-boris" data-source="stats" data-field="first_tour" data-where="player=boris">—</span></p>
+</div>
+<div class="glass tt-tile" id="kpi-games-boris">
+<p class="tt-label">Матчей</p>
+<p class="tt-value" data-draw="k-games-boris" data-source="stats" data-field="games" data-where="player=boris">—</p>
+<p class="tt-note"><span data-draw="k-wins-boris" data-source="stats" data-field="wins" data-where="player=boris">—</span> побед · <span data-draw="k-losses-boris" data-source="stats" data-field="losses" data-where="player=boris">—</span> поражений</p>
+</div>
+<div class="glass tt-tile" id="kpi-winpct-boris">
+<p class="tt-label">Процент побед</p>
+<p class="tt-value"><span data-draw="k-winpct-boris" data-source="stats" data-field="win_pct" data-where="player=boris">—</span><small>%</small></p>
+<p class="tt-note">в турнирах архива</p>
+</div>
+<div class="glass tt-tile" id="kpi-top-boris">
+<p class="tt-label">Позади в среднем</p>
+<p class="tt-value"><span data-draw="k-top-boris" data-source="stats" data-field="behind_pct" data-where="player=boris">—</span><small>%</small></p>
+<p class="tt-note">участников турнира</p>
+</div>
+</section>
+<section class="glass" id="medals-sec-boris">
+<h2>Призовые места</h2>
+<p class="tt-sub">На подиуме <b data-draw="podium-boris" data-source="stats" data-field="podium" data-where="player=boris">—</b> раз из <span data-draw="podium-of-boris" data-source="stats" data-field="tours" data-where="player=boris">—</span> турниров в архиве.</p>
+<div class="tt-medals">
+<div class="tt-medal g" id="gold-boris"><p class="tt-medal-icon">🥇</p><p class="tt-value" data-draw="gold-boris" data-source="stats" data-field="gold" data-where="player=boris">—</p><p class="tt-note">1-е места</p></div>
+<div class="tt-medal s" id="silver-boris"><p class="tt-medal-icon">🥈</p><p class="tt-value" data-draw="silver-boris" data-source="stats" data-field="silver" data-where="player=boris">—</p><p class="tt-note">2-е места</p></div>
+<div class="tt-medal b" id="bronze-boris"><p class="tt-medal-icon">🥉</p><p class="tt-value" data-draw="bronze-boris" data-source="stats" data-field="bronze" data-where="player=boris">—</p><p class="tt-note">3-и места</p></div>
+</div>
+</section>
+<section class="glass" id="activity-sec-boris">
+<h2>Активность по месяцам</h2>
+<p class="tt-sub">Сколько игровых дней было за месяц. Зелёный — рейтинг за месяц вырос, красный — упал.</p>
+<div class="tt-chart" data-draw="monthly-boris" data-source="monthly"></div>
+</section>
+<section class="glass" id="bands-sec-boris">
+<h2>Против кого выигрываю</h2>
+<p class="tt-sub">Процент побед по рейтингу соперника. Считается по матчам, сохранённым в архиве, поэтому картина уточняется с каждым турниром.</p>
+<div class="tt-chart" data-draw="bands-boris" data-source="bands"></div>
+</section>
+<section class="glass" id="recent-sec-boris">
+<h2>Последние турниры</h2>
+<div class="tt-tablewrap">
+<table class="tt-table" data-source="tours" data-row-key="player,id">
+<thead><tr><th data-field="date">Дата</th><th data-field="name">Турнир</th><th class="r" data-field="place">Место</th><th class="r" data-field="players">Участников</th><th class="r" data-field="wins">В</th><th class="r" data-field="losses">П</th><th class="r" data-field="delta">Δ рейтинга</th><th class="r" data-field="fieldAvg">Ср. рейтинг поля</th></tr></thead>
+<tbody data-draw="recent-boris"></tbody>
+</table>
+</div>
+</section>
+<section class="tt-grid2" id="people-sec-boris">
+<div class="glass" id="matches-boris">
+<h2>Матчи</h2>
+<p class="tt-sub">Сайт показывает матчи только последнего турнира, поэтому они копятся с 22.11.2026.</p>
+<div class="tt-tablewrap">
+<table class="tt-table" data-source="matches" data-row-key="player,tourId,game">
+<thead><tr><th data-field="date">Дата</th><th data-field="opp">Соперник</th><th class="r" data-field="oppRating">Его рейтинг</th><th class="r" data-field="for">Счёт</th><th class="r" data-field="delta">Δ</th></tr></thead>
+<tbody data-draw="matches-boris"></tbody>
+</table>
+</div>
+</div>
+<div class="glass" id="bestwins-boris">
+<h2>Лучшие победы</h2>
+<div class="tt-tablewrap">
+<table class="tt-table" data-source="best" data-row-key="player,date,opp">
+<thead><tr><th data-field="date">Дата</th><th data-field="opp">Соперник</th><th class="r" data-field="oppRating">Его рейтинг</th><th class="r" data-field="score">Счёт</th><th class="r" data-field="delta">+ рейтинга</th></tr></thead>
+<tbody data-draw="bestwins-boris"></tbody>
+</table>
+</div>
+</div>
+</section>
+</div>
 <p class="tt-foot">Данные с topspin-club.ru. Сайт показывает только 10 последних турниров игрока, поэтому архив турниров и матчей копится здесь каждый день с 23.11.2026; история рейтинга — с января 2026 по графику в профиле. Рейтинг на сайте обновляется с задержкой.</p>
 </div>
 </div>
@@ -549,7 +709,7 @@ inputs: ['matches'],
 fn: (matches) => {
 const bands = [['до 200', 0, 200], ['200–300', 200, 300], ['300–400', 300, 400], ['400+', 400, 1e9]];
 const out = [];
-['igor', 'alexey'].forEach((player) => {
+['igor', 'alexey', 'boris'].forEach((player) => {
 const ms = matches.filter((m) => m.player === player && m.oppRating != null);
 bands.forEach(([band, lo, hi]) => {
 const b = ms.filter((m) => m.oppRating >= lo && m.oppRating < hi);
@@ -572,7 +732,7 @@ const ru = (v) => String(v).replace('.', ',');
 const num = (v) => (v == null || Number.isNaN(+v) ? '—' : ru(Math.round(+v * 100) / 100));
 const signed = (v) => (v == null ? '—' : (v > 0 ? '+' : v < 0 ? '−' : '') + ru(Math.round(Math.abs(v) * 100) / 100));
 const goodBad = (v) => (+v > 0 ? 'tt-good' : +v < 0 ? 'tt-bad' : '');
-const WHO = ['igor', 'alexey'];
+const WHO = ['igor', 'alexey', 'boris'];
 /* Tabs */
 const showTab = (who) => {
 if (!WHO.includes(who)) who = 'igor';
@@ -614,6 +774,15 @@ g.append('line').attr('x1', x0).attr('x2', x1).attr('y1', y(v)).attr('y2', y(v))
 g.append('text').attr('x', x0 - 8).attr('y', y(v) + 4).attr('text-anchor', 'end').text(v);
 });
 }
+/* Updated at */
+dash.draw('upd-at', (el) => {
+const pd = dash.data('players');
+const stamps = (pd.status === 'ok' ? pd.data : []).map((r) => r.updated || (r.checked ? r.checked + 'T12:00:00Z' : null)).filter(Boolean).sort();
+const iso = (window.__ARCH && window.__ARCH.updatedAt) || stamps[stamps.length - 1];
+if (!iso) { el.textContent = '—'; return; }
+const dt = new Date(iso);
+el.textContent = isNaN(dt) ? String(iso) : dt.toLocaleString('ru-RU', { timeZone: 'Europe/Moscow', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(',', ' в');
+});
 function td(tr, v, cls) { const c = document.createElement('td'); c.textContent = v == null ? '—' : v; if (cls) c.className = cls; tr.append(c); return c; }
 WHO.forEach((P) => {
 const row = () => { const d = dash.data('stats'); return d.status === 'ok' ? d.data.find((r) => r.player === P) : null; };
@@ -808,13 +977,6 @@ el.replaceChildren(svg.node());
 const w = (r) => Math.max(rowH - 20, x(r.win_pct) - m.l);
 if (firstAnim('bands-' + P)) bar.attr('width', 0).transition().delay((r, i) => 80 * i).duration(800).ease(d3.easeCubicOut).attr('width', w);
 else bar.attr('width', w);
-});
-/* Updated */
-dash.draw('updated-' + P, (el) => {
-const iso = window.__ARCH && window.__ARCH.updatedAt;
-if (iso) { el.textContent = new Date(iso).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }); return; }
-const pd = dash.data('players'); const r = pd.status === 'ok' ? pd.data.find((x) => x.player === P) : null;
-el.textContent = r && r.checked ? fmtDate(r.checked) : '—';
 });
 /* Last tournament */
 const lastTour = () => {
