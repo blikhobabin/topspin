@@ -12,13 +12,26 @@ const goodBad = (v) => (+v > 0 ? 'tt-good' : +v < 0 ? 'tt-bad' : '');
 const inClaude = typeof claude !== 'undefined' && claude && typeof claude.use === 'function';
 if (inClaude) document.querySelectorAll('#r-refresh-box').forEach((b) => { b.hidden = false; });
 
+/* On the public site the archive of tournaments up to 22.11.2026 lives in rttf_hist.json ({cols, rows}),
+   so the daily rttf.json stays small. Inside Claude it comes from the dashboard's own r_tours_hist source. */
+window.__RTTF_HIST = window.__RTTF_HIST || null;
+if (!inClaude && typeof fetch === 'function') {
+  fetch('rttf_hist.json?v=' + Date.now()).then((r) => (r.ok ? r.json() : null)).then((h) => {
+    if (!h || !Array.isArray(h.rows) || !Array.isArray(h.cols)) return;
+    window.__RTTF_HIST = h.rows.map((row) => Object.fromEntries(h.cols.map((c, i) => [c, row[i]])));
+    ['r-rating', 'r-deltas', 'r-monthly'].forEach((k) => { window.ttAnimDone[k] = false; });
+    if (window.__RTTF && window.__drawAll) window.__drawAll();
+  }).catch(() => {});
+}
+
 dash.calc('r_tournaments', {
   title: 'RTTF: все турниры',
   description: 'Архив турниров RTTF до 22.11.2026 вместе с новыми, по порядку номеров.',
   inputs: ['r_tours_hist', 'r_tours_new'],
   fn: (r_tours_hist, r_tours_new) => {
     const seen = new Set(); const out = [];
-    [...r_tours_hist, ...r_tours_new].forEach((r) => {
+    const hist = r_tours_hist && r_tours_hist.length ? r_tours_hist : (window.__RTTF_HIST || []);
+    [...hist, ...(r_tours_new || [])].forEach((r) => {
       const n = +r.n; if (!n || seen.has(n)) return; seen.add(n);
       out.push({n, date: r.date, time: r.time, club: r.club, cap: +r.cap, players: +r.players, place: +r.place, wins: +r.wins, losses: +r.losses, rating_before: +r.rating_before, delta: +r.delta, rating_after: +r.rating_after});
     });
