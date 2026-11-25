@@ -394,7 +394,7 @@ dash.draw('r-last', (el) => {
 });
 
 /* actions (Claude only): scheduled tasks through the Claude Code Remote connector */
-const TRIG = {action: 'trig_0164EFga5zwQ2keDKHYgTPDX', update: 'trig_018nP2wD7DHPzhAv4ktPeDk1', autoreg: 'trig_01BSapjwb6TbHiE8LJaWuQUr'};
+const TRIG = {action: 'trig_0164EFga5zwQ2keDKHYgTPDX', update: 'trig_015SWL9Cgk4jkHNDnGgubgse', autoreg: 'trig_01BSapjwb6TbHiE8LJaWuQUr'};
 window.ttAct = window.ttAct || {up: {}, refresh: null};
 const errText = (e) => {
   const c = e && e.code;
